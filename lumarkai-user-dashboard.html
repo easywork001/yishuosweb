@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户中心 - 光影方舟实验室</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+
+        /* 顶部导航栏 */
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid #e9ecef;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 0.8rem;
+        }
+
+        .logo-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #4a90e2;
+        }
+
+        .user-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
+        .back-to-site {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-to-site:hover {
+            background: #357abd;
+        }
+
+        /* 主容器 */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            gap: 2rem;
+        }
+
+        /* 侧边栏 */
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            padding: 1.5rem;
+            height: fit-content;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f1f3f5;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .menu-icon {
+            width: 20px;
+            height: 20px;
+            opacity: 0.7;
+        }
+
+        /* 主内容区 */
+        .main-content {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .content-header {
+            padding: 2rem;
+            border-bottom: 1px solid #e9ecef;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .content-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .content-subtitle {
+            opacity: 0.9;
+        }
+
+        .content-body {
+            padding: 2rem;
+        }
+
+        /* 内容页面 */
+        .content-page {
+            display: none;
+        }
+
+        .content-page.active {
+            display: block;
+        }
+
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4a90e2;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* 近期活动 */
+        .activity-list {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #4a90e2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 0.2rem;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .btn-primary {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #357abd;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="lumarkai-lab.html" class="logo">
+                    <img src="assets/images/lumarkai-logo.png" alt="光影方舟">
+                    <span class="logo-text">光影方舟实验室</span>
+                </a>
+            </div>
+            <div class="nav-right">
+                <div class="user-info">
+                    <img src="" alt="用户头像" class="user-avatar" id="userAvatar">
+                    <span class="user-name" id="userName">用户名</span>
+                </div>
+                <a href="lumarkai-lab.html" class="back-to-site">返回网站</a>
+                <button class="logout-btn" onclick="logout()">退出登录</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主容器 -->
+    <div class="main-container">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">用户中心</h3>
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="menu-item active" data-page="dashboard">
+                        <span class="menu-icon"></span>
+                        数据概览
+                    </a></li>
+                    <li><a href="#" class="menu-item" data-page="downloads">
+                        <span class="menu-icon"></span>
+                        下载记录
+                    </a></li>
+                    <li><a href="#" class="menu-item" data-page="favorites">
+                        <span class="menu-icon"></span>
+                        我的收藏
+                    </a></li>
+                    <li><a href="#" class="menu-item" data-page="usage">
+                        <span class="menu-icon"></span>
+                        使用统计
+                    </a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">账户管理</h3>
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="menu-item" data-page="profile">
+                        <span class="menu-icon"></span>
+                        个人资料
+                    </a></li>
+                    <li><a href="#" class="menu-item" data-page="security">
+                        <span class="menu-icon"></span>
+                        安全设置
+                    </a></li>
+                    <li><a href="#" class="menu-item" data-page="subscription">
+                        <span class="menu-icon"></span>
+                        会员服务
+                    </a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 数据概览页面 -->
+            <div class="content-page active" id="dashboard">
+                <div class="content-header">
+                    <h2 class="content-title">数据概览</h2>
+                    <p class="content-subtitle">查看您的使用情况和活动统计</p>
+                </div>
+                <div class="content-body">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalDownloads">0</div>
+                            <div class="stat-label">总下载数</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalFavorites">0</div>
+                            <div class="stat-label">收藏素材</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="todayUsage">0</div>
+                            <div class="stat-label">今日使用</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="membershipDays">--</div>
+                            <div class="stat-label">会员剩余天数</div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-bottom: 1rem; color: #333;">近期活动</h3>
+                    <div class="activity-list" id="activityList">
+                        <div class="activity-item">
+                            <div class="activity-icon"></div>
+                            <div class="activity-content">
+                                <div class="activity-title">下载了素材：韩国女性肖像</div>
+                                <div class="activity-time">2小时前</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon"></div>
+                            <div class="activity-content">
+                                <div class="activity-title">收藏了素材：富士山金色时刻</div>
+                                <div class="activity-time">5小时前</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon"></div>
+                            <div class="activity-content">
+                                <div class="activity-title">搜索了关键词：自然风光</div>
+                                <div class="activity-time">1天前</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 下载记录页面 -->
+            <div class="content-page" id="downloads">
+                <div class="content-header">
+                    <h2 class="content-title">下载记录</h2>
+                    <p class="content-subtitle">查看您的所有下载历史</p>
+                </div>
+                <div class="content-body">
+                    <div id="downloadsList">
+                        <p style="text-align: center; color: #999; padding: 3rem;">暂无下载记录</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 我的收藏页面 -->
+            <div class="content-page" id="favorites">
+                <div class="content-header">
+                    <h2 class="content-title">我的收藏</h2>
+                    <p class="content-subtitle">管理您收藏的素材</p>
+                </div>
+                <div class="content-body">
+                    <div id="favoritesList">
+                        <p style="text-align: center; color: #999; padding: 3rem;">暂无收藏内容</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 使用统计页面 -->
+            <div class="content-page" id="usage">
+                <div class="content-header">
+                    <h2 class="content-title">使用统计</h2>
+                    <p class="content-subtitle">详细的使用数据分析</p>
+                </div>
+                <div class="content-body">
+                    <p style="text-align: center; color: #999; padding: 3rem;">统计功能开发中...</p>
+                </div>
+            </div>
+
+            <!-- 个人资料页面 -->
+            <div class="content-page" id="profile">
+                <div class="content-header">
+                    <h2 class="content-title">个人资料</h2>
+                    <p class="content-subtitle">管理您的个人信息</p>
+                </div>
+                <div class="content-body">
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label class="form-label">用户名</label>
+                            <input type="text" class="form-input" id="profileName" placeholder="请输入用户名">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">邮箱</label>
+                            <input type="email" class="form-input" id="profileEmail" placeholder="请输入邮箱" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">手机号</label>
+                            <input type="tel" class="form-input" id="profilePhone" placeholder="请输入手机号">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">账户类型</label>
+                            <input type="text" class="form-input" id="profileAccountType" readonly>
+                        </div>
+                        <button type="submit" class="btn-primary">保存更改</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 安全设置页面 -->
+            <div class="content-page" id="security">
+                <div class="content-header">
+                    <h2 class="content-title">安全设置</h2>
+                    <p class="content-subtitle">管理您的账户安全</p>
+                </div>
+                <div class="content-body">
+                    <div class="form-group">
+                        <label class="form-label">修改密码</label>
+                        <input type="password" class="form-input" placeholder="当前密码">
+                        <input type="password" class="form-input" placeholder="新密码" style="margin-top: 0.5rem;">
+                        <input type="password" class="form-input" placeholder="确认新密码" style="margin-top: 0.5rem;">
+                        <button class="btn-primary" style="margin-top: 1rem;">更新密码</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 会员服务页面 -->
+            <div class="content-page" id="subscription">
+                <div class="content-header">
+                    <h2 class="content-title">会员服务</h2>
+                    <p class="content-subtitle">升级您的账户获得更多权益</p>
+                </div>
+                <div class="content-body">
+                    <p style="text-align: center; color: #999; padding: 3rem;">会员功能开发中...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+            loadUserData();
+            initMenuNavigation();
+        });
+
+        // 检查登录状态
+        function checkLoginStatus() {
+            const user = JSON.parse(localStorage.getItem('lumarkai_user') || 'null');
+            if (!user || !user.isLoggedIn) {
+                alert('请先登录');
+                window.location.href = 'lumarkai-login.html';
+                return;
+            }
+
+            // 填充用户信息
+            document.getElementById('userName').textContent = user.name || '用户';
+            document.getElementById('userAvatar').src = user.avatar || 'assets/images/xiaoyi.png';
+        }
+
+        // 加载用户数据
+        function loadUserData() {
+            const user = JSON.parse(localStorage.getItem('lumarkai_user') || 'null');
+            if (!user) return;
+
+            // 模拟用户统计数据
+            const stats = {
+                totalDownloads: Math.floor(Math.random() * 50) + 10,
+                totalFavorites: Math.floor(Math.random() * 20) + 5,
+                todayUsage: Math.floor(Math.random() * 10) + 1,
+                membershipDays: user.accountType === 'enterprise' ? '无限制' : Math.floor(Math.random() * 30) + 1
+            };
+
+            // 更新统计数据
+            document.getElementById('totalDownloads').textContent = stats.totalDownloads;
+            document.getElementById('totalFavorites').textContent = stats.totalFavorites;
+            document.getElementById('todayUsage').textContent = stats.todayUsage;
+            document.getElementById('membershipDays').textContent = stats.membershipDays;
+
+            // 填充个人资料表单
+            document.getElementById('profileName').value = user.name || '';
+            document.getElementById('profileEmail').value = user.email || '';
+            document.getElementById('profilePhone').value = user.phone || '';
+            
+            const accountTypeNames = {
+                'personal': '个人账户',
+                'enterprise': '企业账户',
+                'developer': '开发者账户'
+            };
+            document.getElementById('profileAccountType').value = accountTypeNames[user.accountType] || '个人账户';
+        }
+
+        // 初始化菜单导航
+        function initMenuNavigation() {
+            const menuItems = document.querySelectorAll('.menu-item');
+            const contentPages = document.querySelectorAll('.content-page');
+
+            menuItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 移除所有active状态
+                    menuItems.forEach(mi => mi.classList.remove('active'));
+                    contentPages.forEach(cp => cp.classList.remove('active'));
+                    
+                    // 添加当前项的active状态
+                    this.classList.add('active');
+                    
+                    // 显示对应的内容页面
+                    const targetPage = this.getAttribute('data-page');
+                    const targetContent = document.getElementById(targetPage);
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        // 个人资料表单提交
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const user = JSON.parse(localStorage.getItem('lumarkai_user') || 'null');
+            if (!user) return;
+
+            // 更新用户信息
+            user.name = document.getElementById('profileName').value;
+            user.phone = document.getElementById('profilePhone').value;
+            
+            // 保存到localStorage
+            localStorage.setItem('lumarkai_user', JSON.stringify(user));
+            
+            // 更新显示的用户名
+            document.getElementById('userName').textContent = user.name;
+            
+            alert('个人资料更新成功！');
+        });
+
+        // 退出登录
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                localStorage.removeItem('lumarkai_user');
+                window.location.href = 'lumarkai-login.html';
+            }
+        }
+    </script>
+</body>
+</html> 

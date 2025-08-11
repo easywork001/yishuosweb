@@ -1,0 +1,40 @@
+{
+  "name": "yishuos-database",
+  "version": "1.0.0",
+  "description": "易术科技数据库系统 - 支持本地和云数据库",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "migrate": "node migrations/run-migrations.js",
+    "seed": "node seeds/run-seeds.js",
+    "test": "jest",
+    "backup": "node utils/backup.js",
+    "restore": "node utils/restore.js"
+  },
+  "keywords": ["database", "user-management", "cookies", "cloud-ready"],
+  "author": "易术科技",
+  "license": "MIT",
+  "dependencies": {
+    "sqlite3": "^5.1.6",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^9.0.1",
+    "dotenv": "^16.3.1",
+    "joi": "^17.11.0",
+    "winston": "^3.11.0",
+    "compression": "^1.7.4",
+    "express-rate-limit": "^7.1.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+} 

@@ -1,0 +1,52 @@
+{
+  "name": "yishuos-tech",
+  "version": "1.0.0",
+  "description": "易术科技官网 - 前后端分离项目",
+  "private": true,
+  "workspaces": [
+    "frontend/*",
+    "backend/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "concurrently \"npm run dev --workspace=frontend/yishuos-main\" \"npm run dev --workspace=frontend/lumarkai-lab\"",
+    "dev:backend": "concurrently \"npm run dev --workspace=backend/yishuos-api\" \"npm run dev --workspace=backend/lumarkai-api\"",
+    "build": "npm run build --workspaces",
+    "build:frontend": "npm run build --workspace=frontend/yishuos-main && npm run build --workspace=frontend/lumarkai-lab",
+    "build:backend": "npm run build --workspace=backend/yishuos-api && npm run build --workspace=backend/lumarkai-api",
+    "install:all": "npm install && npm run install:frontend && npm run install:backend",
+    "install:frontend": "npm install --workspace=frontend/yishuos-main && npm install --workspace=frontend/lumarkai-lab",
+    "install:backend": "npm install --workspace=backend/yishuos-api && npm install --workspace=backend/lumarkai-api",
+    "lint": "npm run lint --workspaces",
+    "test": "npm run test --workspaces",
+    "clean": "npm run clean --workspaces",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yishuos-tech/yishuos-website.git"
+  },
+  "keywords": [
+    "yishuos",
+    "lumarkai",
+    "ai",
+    "technology",
+    "website",
+    "react",
+    "nextjs",
+    "typescript"
+  ],
+  "author": "YishuosTech Team",
+  "license": "MIT"
+} 

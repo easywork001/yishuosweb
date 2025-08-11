@@ -1,0 +1,129 @@
+version: '3.8'
+
+services:
+  # 数据库服务
+  postgres:
+    image: postgres:15-alpine
+    container_name: yishuos-postgres
+    environment:
+      POSTGRES_DB: yishuos_db
+      POSTGRES_USER: yishuos_user
+      POSTGRES_PASSWORD: yishuos_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - yishuos-network
+
+  # Redis缓存服务
+  redis:
+    image: redis:7-alpine
+    container_name: yishuos-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - yishuos-network
+
+  # YishuosTech主站前端
+  yishuos-main:
+    build:
+      context: ./frontend/yishuos-main
+      dockerfile: Dockerfile
+    container_name: yishuos-main-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://yishuos-api:4000
+    depends_on:
+      - yishuos-api
+    networks:
+      - yishuos-network
+
+  # LumarkaiLab光影方舟前端
+  lumarkai-lab:
+    build:
+      context: ./frontend/lumarkai-lab
+      dockerfile: Dockerfile
+    container_name: lumarkai-lab-frontend
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://lumarkai-api:4001
+    depends_on:
+      - lumarkai-api
+    networks:
+      - yishuos-network
+
+  # YishuosTech后端API
+  yishuos-api:
+    build:
+      context: ./backend/yishuos-api
+      dockerfile: Dockerfile
+    container_name: yishuos-api-backend
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://yishuos_user:yishuos_password@postgres:5432/yishuos_db
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=yishuos_jwt_secret_key
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - yishuos-network
+
+  # LumarkaiLab后端API
+  lumarkai-api:
+    build:
+      context: ./backend/lumarkai-api
+      dockerfile: Dockerfile
+    container_name: lumarkai-api-backend
+    ports:
+      - "4001:4000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://yishuos_user:yishuos_password@postgres:5432/lumarkai_db
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=lumarkai_jwt_secret_key
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - yishuos-network
+
+  # Nginx反向代理
+  nginx:
+    image: nginx:alpine
+    container_name: yishuos-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - yishuos-main
+      - lumarkai-lab
+      - yishuos-api
+      - lumarkai-api
+    networks:
+      - yishuos-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  yishuos-network:
+    driver: bridge 

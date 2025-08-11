@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>易术科技资料库 - Handbook LargeModel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #1a1a1a url('image-back/表单页背景.png') center center / cover no-repeat fixed;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 3D几何背景 - 保持作为装饰层 */
+        .geometric-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 26, 26, 0.3);
+            z-index: 1;
+        }
+
+        .geometric-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            perspective: 1000px;
+        }
+
+        .shape {
+            position: absolute;
+            background: linear-gradient(45deg, #4a90e2, #357abd);
+            border-radius: 8px;
+            opacity: 0.8;
+            transform-style: preserve-3d;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .shape::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            background: linear-gradient(45deg, #2c2c2c, #1a1a1a);
+            border-radius: 12px;
+            z-index: -1;
+            transform: translateZ(-20px);
+        }
+
+        .shape.large {
+            width: 120px;
+            height: 80px;
+            top: 20%;
+            right: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape.medium {
+            width: 80px;
+            height: 60px;
+            top: 60%;
+            right: 20%;
+            animation-delay: 2s;
+        }
+
+        .shape.small {
+            width: 60px;
+            height: 40px;
+            top: 40%;
+            right: 5%;
+            animation-delay: 4s;
+        }
+
+        .shape.cube {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, #333, #555);
+            top: 30%;
+            right: 15%;
+            border-radius: 4px;
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotateX(0deg) rotateY(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotateX(10deg) rotateY(10deg);
+            }
+        }
+
+        /* 主容器 */
+        .container {
+            position: relative;
+            z-index: 2;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .content-wrapper {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 60px;
+            height: 100%;
+        }
+
+        /* 左侧内容区 */
+        .left-content {
+            flex: 1;
+            max-width: 600px;
+            color: white;
+            margin-top: -15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            padding-top: 20px;
+        }
+
+        .main-title {
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #b0b0b0;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        .contact-info {
+            font-size: 1rem;
+            color: #888;
+            line-height: 1.5;
+        }
+
+        /* 右侧表单卡片 */
+        .form-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            width: 450px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            flex-shrink: 0;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .form-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-subtitle {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            color: #333;
+            margin-bottom: 0.4rem;
+            font-weight: 500;
+        }
+
+        .required {
+            color: #ff4757;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #333;
+            background: #fff;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .form-input::placeholder, .form-textarea::placeholder {
+            color: #999;
+        }
+
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 0.8rem;
+            color: #999;
+            margin-top: 0.5rem;
+        }
+
+        .verify-group {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .verify-input {
+            flex: 1;
+        }
+
+        .verify-btn {
+            padding: 10px 16px;
+            background: #f5f5f5;
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            color: #666;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .verify-btn:hover {
+            background: #e9e9e9;
+            border-color: #d1d5d9;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin: 1.2rem 0;
+        }
+
+        .checkbox {
+            width: 16px;
+            height: 16px;
+            margin-top: 2px;
+        }
+
+        .checkbox-label {
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.3;
+        }
+
+        .checkbox-label a {
+            color: #4a90e2;
+            text-decoration: none;
+        }
+
+        .checkbox-label a:hover {
+            text-decoration: underline;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #7b9df0 0%, #4a90e2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.8rem;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #6b8de0 0%, #3a80d2 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.3);
+        }
+
+        /* 右下角客服图标 */
+        .customer-service {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .customer-service:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .customer-service-icon {
+            width: 20px;
+            height: 20px;
+            background: #4a90e2;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .customer-service-icon::before {
+            content: '?';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .content-wrapper {
+                gap: 40px;
+            }
+            
+            .main-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 968px) {
+            .container {
+                height: auto;
+                min-height: 100vh;
+                padding: 15px;
+            }
+            
+            .content-wrapper {
+                flex-direction: column;
+                gap: 2rem;
+                text-align: center;
+                height: auto;
+            }
+            
+            .left-content {
+                max-width: 100%;
+                padding-top: 10px;
+            }
+            
+            .main-title {
+                font-size: 2.2rem;
+            }
+            
+            .form-card {
+                width: 100%;
+                max-width: 450px;
+                padding: 25px;
+                max-height: none;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .main-title {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .form-card {
+                padding: 20px;
+            }
+            
+            .customer-service {
+                width: 45px;
+                height: 45px;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D几何背景 -->
+    <div class="geometric-bg">
+        <div class="geometric-shapes">
+            <div class="shape large"></div>
+            <div class="shape medium"></div>
+            <div class="shape small"></div>
+            <div class="shape cube"></div>
+        </div>
+    </div>
+
+    <!-- 主内容 -->
+    <div class="container">
+        <div class="content-wrapper">
+            <!-- 左侧内容 -->
+            <div class="left-content">
+                <h1 class="main-title">易术科技资料库</h1>
+                <p class="subtitle">获取最新最全的易术科技相关资料，启动业务增长之旅</p>
+                <div class="contact-info">
+                    如您现在就需要帮助，可立即拨打400-007-8277与我们联系！
+                </div>
+            </div>
+
+            <!-- 右侧表单卡片 -->
+            <div class="form-card">
+                <div class="form-header">
+                    <h2 class="form-title">EasyX LargeModel</h2>
+                    <p class="form-subtitle">即刻开启增长引擎，引爆用户增长</p>
+                </div>
+
+                <form>
+                    <!-- 联系人 -->
+                    <div class="form-group">
+                        <label class="form-label"><span class="required">*</span> 联系人</label>
+                        <input type="text" class="form-input" placeholder="请输入联系人姓名" required>
+                    </div>
+
+                    <!-- 联系电话 -->
+                    <div class="form-group">
+                        <label class="form-label"><span class="required">*</span> 联系电话</label>
+                        <input type="tel" class="form-input" placeholder="请输入联系人手机号码" required>
+                    </div>
+
+                    <!-- 验证码 -->
+                    <div class="form-group">
+                        <label class="form-label"><span class="required">*</span> 验证码</label>
+                        <div class="verify-group">
+                            <div class="verify-input">
+                                <input type="text" class="form-input" placeholder="请输入验证码" required>
+                            </div>
+                            <button type="button" class="verify-btn">发送验证码</button>
+                        </div>
+                    </div>
+
+                    <!-- 公司名称 -->
+                    <div class="form-group">
+                        <label class="form-label"><span class="required">*</span> 公司名称</label>
+                        <input type="text" class="form-input" placeholder="请输入公司全称" required>
+                    </div>
+
+                    <!-- 咨询问题 -->
+                    <div class="form-group">
+                        <label class="form-label">咨询问题</label>
+                        <textarea class="form-textarea" placeholder="请详述您的业务需求或产品关注点"></textarea>
+                        <div class="char-count">0/300</div>
+                    </div>
+
+                    <!-- 服务条款同意 -->
+                    <div class="checkbox-group">
+                        <input type="checkbox" class="checkbox" id="agreement" required>
+                        <label for="agreement" class="checkbox-label">
+                            阅读并同意易术科技<a href="#" target="_blank">《网站服务条款》</a>、<a href="#" target="_blank">《隐私政策》</a>
+                        </label>
+                    </div>
+
+                    <!-- 提交按钮 -->
+                    <button type="submit" class="submit-btn">提交</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 客服图标 -->
+    <div class="customer-service">
+        <div class="customer-service-icon"></div>
+    </div>
+
+    <script>
+        // 字符计数功能
+        const textarea = document.querySelector('.form-textarea');
+        const charCount = document.querySelector('.char-count');
+        
+        if (textarea && charCount) {
+            textarea.addEventListener('input', function() {
+                const count = this.value.length;
+                charCount.textContent = count + '/300';
+                
+                if (count > 300) {
+                    this.value = this.value.substring(0, 300);
+                    charCount.textContent = '300/300';
+                }
+            });
+        }
+
+        // 验证码发送功能
+        const verifyBtn = document.querySelector('.verify-btn');
+        let countdown = 0;
+        
+        if (verifyBtn) {
+            verifyBtn.addEventListener('click', function() {
+                if (countdown > 0) return;
+                
+                // 简单的手机号验证
+                const phoneInput = document.querySelector('input[type="tel"]');
+                const phone = phoneInput.value.trim();
+                
+                if (!phone) {
+                    alert('请先输入手机号码');
+                    phoneInput.focus();
+                    return;
+                }
+                
+                if (!/^1[3-9]\d{9}$/.test(phone)) {
+                    alert('请输入正确的手机号码');
+                    phoneInput.focus();
+                    return;
+                }
+                
+                // 开始倒计时
+                countdown = 60;
+                this.textContent = countdown + 's';
+                this.disabled = true;
+                
+                const timer = setInterval(() => {
+                    countdown--;
+                    if (countdown > 0) {
+                        this.textContent = countdown + 's';
+                    } else {
+                        this.textContent = '发送验证码';
+                        this.disabled = false;
+                        clearInterval(timer);
+                    }
+                }, 1000);
+                
+                // 这里可以添加实际的验证码发送逻辑
+                console.log('发送验证码到:', phone);
+            });
+        }
+
+        // 表单提交处理
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // 获取表单数据
+                const formData = new FormData(this);
+                const data = {};
+                
+                // 获取所有输入字段
+                const inputs = this.querySelectorAll('input, textarea');
+                inputs.forEach(input => {
+                    if (input.type === 'checkbox') {
+                        data[input.id] = input.checked;
+                    } else {
+                        data[input.placeholder || input.type] = input.value;
+                    }
+                });
+                
+                console.log('表单数据:', data);
+                
+                // 简单验证
+                const requiredFields = this.querySelectorAll('[required]');
+                let isValid = true;
+                
+                requiredFields.forEach(field => {
+                    if (!field.value.trim() || (field.type === 'checkbox' && !field.checked)) {
+                        isValid = false;
+                        field.focus();
+                        return false;
+                    }
+                });
+                
+                if (isValid) {
+                    alert('提交成功！我们会尽快与您联系。');
+                    // 这里可以添加实际的表单提交逻辑
+                } else {
+                    alert('请填写完整信息并同意服务条款');
+                }
+            });
+        }
+
+        // 客服图标点击事件
+        const customerService = document.querySelector('.customer-service');
+        if (customerService) {
+            customerService.addEventListener('click', function() {
+                alert('客服功能暂未开放，请拨打 400-007-8277');
+            });
+        }
+    </script>
+</body>
+</html> 
