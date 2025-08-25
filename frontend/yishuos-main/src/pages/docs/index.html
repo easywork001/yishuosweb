@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文档中心 - 易术研究</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        /* 顶部导航栏 */
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #e9ecef;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            height: 64px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            height: 32px;
+            width: auto;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1c1c1c;
+        }
+
+        .divider {
+            width: 1px;
+            height: 20px;
+            background: #e9ecef;
+        }
+
+        .page-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .search-box {
+            position: relative;
+            width: 240px;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 36px;
+            padding: 0 16px 0 40px;
+            border: 1px solid #e9ecef;
+            border-radius: 18px;
+            font-size: 14px;
+            background: #f8f9fa;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 14px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .nav-button.secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #e9ecef;
+        }
+
+        .nav-button.secondary:hover {
+            background: #e9ecef;
+            color: #333;
+        }
+
+        .nav-button.primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .nav-button.primary:hover {
+            background: #2563eb;
+        }
+
+        /* 主容器 */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        /* 面包屑导航 */
+        .breadcrumb {
+            margin-bottom: 24px;
+        }
+
+        .breadcrumb-item {
+            display: inline;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .breadcrumb-item:not(:last-child)::after {
+            content: " / ";
+            margin: 0 8px;
+            color: #ccc;
+        }
+
+        .breadcrumb-item.active {
+            color: #3b82f6;
+        }
+
+        /* 文档标题区域 */
+        .document-header {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .document-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1c1c1c;
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+
+        .document-meta {
+            display: flex;
+            gap: 24px;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .download-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .download-info {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .download-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .download-button:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        /* 内容区域 */
+        .content-container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 32px;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-section {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1c1c1c;
+            margin-bottom: 16px;
+        }
+
+        .section-content {
+            color: #555;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        .section-content p {
+            margin-bottom: 16px;
+        }
+
+        /* 侧边栏 */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .sidebar-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1c1c1c;
+            margin-bottom: 16px;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-item {
+            margin-bottom: 8px;
+        }
+
+        .toc-item a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s ease;
+        }
+
+        .toc-item a:hover {
+            color: #3b82f6;
+        }
+
+        .toc-item.active a {
+            color: #3b82f6;
+            font-weight: 500;
+        }
+
+        /* 文档预览 */
+        .document-preview {
+            width: 100%;
+            max-width: 800px;
+            margin: 32px auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .document-preview img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 16px;
+            }
+
+            .search-box {
+                width: 180px;
+            }
+
+            .nav-buttons {
+                display: none;
+            }
+
+            .main-container {
+                padding: 24px 16px;
+            }
+
+            .content-container {
+                grid-template-columns: 1fr;
+            }
+
+            .document-header {
+                padding: 24px;
+            }
+
+            .document-title {
+                font-size: 24px;
+            }
+
+            .document-meta {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .download-section {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .main-content {
+                padding: 24px;
+            }
+        }
+
+        /* 动画效果 */
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 滚动指示器 */
+        .scroll-indicator {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(59, 130, 246, 0.1);
+            z-index: 99;
+        }
+
+        .scroll-progress {
+            height: 100%;
+            background: #3b82f6;
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- 滚动进度条 -->
+    <div class="scroll-indicator">
+        <div class="scroll-progress" id="scrollProgress"></div>
+    </div>
+
+    <!-- 顶部导航 -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="logo">
+                    <img src="/assets/images/易术研究.png" alt="易术研究">
+                </div>
+                <div class="divider"></div>
+                <span class="page-title">文档中心</span>
+            </div>
+            <div class="nav-right">
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="搜索文档、教程...">
+                    <span class="search-icon"></span>
+                </div>
+                <div class="nav-buttons">
+                    <a href="#" class="nav-button secondary">文档</a>
+                    <a href="#" class="nav-button primary">登录</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区域 -->
+    <main class="main-container fade-in">
+        <!-- 面包屑导航 -->
+        <nav class="breadcrumb">
+            <span class="breadcrumb-item">文档中心</span>
+            <span class="breadcrumb-item active">大模型应用落地白皮书</span>
+        </nav>
+
+        <!-- 文档标题区域 -->
+        <div class="document-header">
+            <h1 class="document-title">大模型应用落地白皮书 ——企业AI转型行动指南 | 易术研究</h1>
+            <div class="document-meta">
+                <div class="meta-item">
+                    <span></span>
+                    <span>最近更新时间：2024.12.10 12:58:21</span>
+                </div>
+                <div class="meta-item">
+                    <span></span>
+                    <span>首次发布时间：2024.12.04 19:42:58</span>
+                </div>
+                <div class="meta-item">
+                    <span></span>
+                    <span>预计阅读时间：15分钟</span>
+                </div>
+            </div>
+            <div class="download-section">
+                <div class="download-info">白皮书下载</div>
+                <a href="#" class="download-button">
+                    <span>下载次数：</span>
+                    <span>Handbook_LargeModel.pdf</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- 内容容器 -->
+        <div class="content-container">
+            <!-- 主要内容 -->
+            <div class="main-content">
+                <!-- 白皮书下载链接 -->
+                <div class="content-section" id="download">
+                    <h2 class="section-title">白皮书下载</h2>
+                    <div class="section-content">
+                        <p><a href="#" style="color: #3b82f6; text-decoration: none;">《大模型应用落地白皮书 ——企业AI转型行动指南》</a> 📎</p>
+                    </div>
+                </div>
+
+                <!-- 白皮书简介 -->
+                <div class="content-section" id="introduction">
+                    <h2 class="section-title">白皮书简介</h2>
+                    <div class="section-content">
+                        <p>大模型技术已经进入与业务深度融合的阶段，且在企业落地的周期和应用速度均超出预期，众多企业正在就大模型的应用场景展开行动探索。同时，企业也认识到，选择正确的大模型产品和服务、正确的技术伙伴，能让落地大模型的过程事半功倍。</p>
+                        
+                        <p>为此，易术研究联合 IDC 共同发布《大模型应用落地白皮书 ——企业AI转型行动指南》，详细介绍了大模型落地过程中，企业所面临的挑战与机遇，以及企业应如何通过精准选择、高效落地、持续挖掘等步骤，完整释放大模型潜力与价值，助力业务增长。</p>
+                        
+                        <p>白皮书中包含汽车、金融、互联网、教育科研、零售消费、文化娱乐、医疗健康、企业服务、游戏、智能终端等各行业的大模型落地应用案例，相信对各行各业的企业都有所帮助，欢迎点击下载。</p>
+                    </div>
+                </div>
+
+                <!-- 文档预览 -->
+                <div class="document-preview">
+                    <img src="https://via.placeholder.com/800x1000/f0f0f0/666?text=大模型应用落地白皮书\n企业AI转型行动指南\n\n目录\nCONTENTS\n\n核心观点\n\n第一章：技术强劲，大模型领域深度问题\n第二章：市场爆发，大模型产业应用案例丰富\n第三章：落地关键，大模型应用的成功要素" alt="白皮书预览">
+                </div>
+
+                <!-- 核心观点 -->
+                <div class="content-section" id="overview">
+                    <h2 class="section-title">核心观点</h2>
+                    <div class="section-content">
+                        <p><strong>技术成熟度快速提升：</strong>大模型技术在2024年迎来爆发式增长，从基础能力到应用场景都有显著突破。</p>
+                        
+                        <p><strong>企业应用需求旺盛：</strong>各行业企业积极探索大模型应用，从客服机器人到智能分析，应用场景不断扩展。</p>
+                        
+                        <p><strong>落地实施成为关键：</strong>技术选型、数据准备、模型训练、部署优化等环节决定了大模型应用的成功与否。</p>
+                    </div>
+                </div>
+
+                <!-- 适用对象 -->
+                <div class="content-section" id="audience">
+                    <h2 class="section-title">适用对象</h2>
+                    <div class="section-content">
+                        <p>本白皮书适合以下读者：</p>
+                        <ul style="margin-left: 20px; margin-top: 12px;">
+                            <li>企业CTO、技术总监等技术决策者</li>
+                            <li>AI产品经理和项目负责人</li>
+                            <li>大模型技术研发工程师</li>
+                            <li>数字化转型咨询顾问</li>
+                            <li>对大模型应用感兴趣的业务负责人</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 章节概览 -->
+                <div class="content-section" id="chapters">
+                    <h2 class="section-title">章节概览</h2>
+                    <div class="section-content">
+                        <h3 style="color: #3b82f6; margin-bottom: 12px;">第一章：技术强劲，大模型领域深度问题</h3>
+                        <p>分析当前大模型技术发展现状，包括技术架构演进、性能提升、成本优化等关键技术指标的突破。</p>
+                        
+                        <h3 style="color: #3b82f6; margin: 24px 0 12px;">第二章：市场爆发，大模型产业应用案例丰富</h3>
+                        <p>展示各行业大模型应用的成功案例，分析市场需求特点和发展趋势。</p>
+                        
+                        <h3 style="color: #3b82f6; margin: 24px 0 12px;">第三章：落地关键，大模型应用的成功要素</h3>
+                        <p>深入探讨企业在大模型落地过程中的关键成功因素，提供实用的实施指南。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 侧边栏 -->
+            <aside class="sidebar">
+                <!-- 目录 -->
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">目录</h3>
+                    <ul class="toc-list">
+                        <li class="toc-item active"><a href="#overview">核心观点</a></li>
+                        <li class="toc-item"><a href="#introduction">白皮书简介</a></li>
+                        <li class="toc-item"><a href="#download">白皮书下载</a></li>
+                        <li class="toc-item"><a href="#audience">适用对象</a></li>
+                        <li class="toc-item"><a href="#chapters">章节概览</a></li>
+                    </ul>
+                </div>
+
+                <!-- 相关资源 -->
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">相关资源</h3>
+                    <ul class="toc-list">
+                        <li class="toc-item"><a href="#">大模型技术指南</a></li>
+                        <li class="toc-item"><a href="#">AI应用最佳实践</a></li>
+                        <li class="toc-item"><a href="#">企业数字化转型手册</a></li>
+                        <li class="toc-item"><a href="#">行业解决方案集</a></li>
+                    </ul>
+                </div>
+
+                <!-- 联系我们 -->
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">联系我们</h3>
+                    <div class="section-content">
+                        <p style="font-size: 14px; color: #666;">如有疑问或需要技术支持，请联系我们：</p>
+                        <p style="font-size: 14px; margin-top: 8px;">
+                            📧 support@yishu-research.com<br>
+                            📞 400-888-9999
+                        </p>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <script>
+        // 滚动进度条
+        function updateScrollProgress() {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            document.getElementById('scrollProgress').style.width = scrollPercent + '%';
+        }
+
+        // 平滑滚动到锚点
+        function smoothScrollToAnchor() {
+            const links = document.querySelectorAll('a[href^="#"]');
+            links.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        // 搜索功能
+        function initSearch() {
+            const searchInput = document.querySelector('.search-input');
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const query = e.target.value;
+                    if (query.trim()) {
+                        alert(`搜索功能开发中...\n搜索关键词：${query}`);
+                    }
+                }
+            });
+        }
+
+        // 下载功能
+        function initDownload() {
+            const downloadButtons = document.querySelectorAll('.download-button');
+            downloadButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    alert('下载功能开发中...\n白皮书将在完成后提供下载链接。');
+                });
+            });
+        }
+
+        // 目录高亮
+        function updateTocHighlight() {
+            const sections = document.querySelectorAll('.content-section');
+            const tocItems = document.querySelectorAll('.toc-item');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.id;
+                        tocItems.forEach(item => {
+                            const link = item.querySelector('a');
+                            if (link && link.getAttribute('href') === `#${id}`) {
+                                tocItems.forEach(i => i.classList.remove('active'));
+                                item.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, {
+                rootMargin: '-100px 0px -80% 0px'
+            });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 添加fade-in动画
+            document.body.classList.add('fade-in');
+            
+            // 初始化功能
+            smoothScrollToAnchor();
+            initSearch();
+            initDownload();
+            updateTocHighlight();
+            
+            // 滚动事件监听
+            window.addEventListener('scroll', updateScrollProgress);
+            
+            // 初始化滚动进度
+            updateScrollProgress();
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,72 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: |
+        if [ -f "package.json" ]; then
+          npm ci
+        fi
+        
+    - name: Deploy to server
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT || 22 }}
+        script: |
+          echo "🚀 开始部署易术科技项目..."
+          
+          # 进入项目目录
+          cd /var/www/yishuosweb
+          
+          # 备份当前版本
+          if [ -d ".git" ]; then
+            echo "📦 备份当前版本..."
+            cp -r . ../yishuosweb_backup_$(date +%Y%m%d_%H%M%S)
+          fi
+          
+          # 拉取最新代码
+          echo "📥 拉取最新代码..."
+          git fetch origin
+          git reset --hard origin/main
+          
+          # 设置文件权限
+          echo "🔐 设置文件权限..."
+          sudo chown -R www-data:www-data /var/www/yishuosweb
+          sudo chmod -R 755 /var/www/yishuosweb
+          
+          # 重启Nginx
+          echo "🔄 重启Nginx服务..."
+          sudo systemctl reload nginx
+          
+          # 检查服务状态
+          echo "🔍 检查服务状态..."
+          sudo systemctl status nginx --no-pager -l
+          
+          echo "✅ 部署完成！"
+          
+    - name: Deployment Status
+      if: always()
+      run: |
+        echo "Deployment completed for ${{ github.repository }}"
+        echo "Commit: ${{ github.sha }}"
+        echo "Branch: ${{ github.ref }}" 

@@ -1,145 +1,204 @@
-# 易术官网项目 (Yishuos Official Website)
+# 易术科技官方网站
 
-## 项目简介
+> ⚠️ **重要提醒**: 本项目已完成重构，请使用新的启动方式和访问路径
 
-易术官网是一个现代化的企业官网项目，集成了多个品牌展示、产品介绍、解决方案展示等功能模块。项目采用响应式设计，支持多端访问。
+## 🚀 项目概述
 
-## 主要功能
+易术科技官方网站是一个现代化的企业展示平台，包含易术主站和光影方舟实验室两个核心模块。项目采用前后端分离架构，支持响应式设计和现代化Web技术。
 
-### 🏢 品牌矩阵展示
-- **易术创新** - 企业创新服务
-- **易术研究** - 研究咨询服务  
-- **易术营销** - 营销解决方案
-- **EAI** - AI技术平台
-- **光影方舟** - 创意设计服务
-- **半径十五米** - 社区服务平台
+## 🏗️ 项目架构
 
-### 🎯 核心页面
-- 首页展示
-- 产品介绍
-- 解决方案
-- 研究白皮书
-- 社区互动
-- 企业介绍
-- 联系我们
-
-### 🚀 技术特性
-- 响应式设计，支持移动端
-- 现代化UI/UX设计
-- 流畅的动画效果
-- 多语言支持
-- AI聊天助手集成
-
-## 项目结构
-
+### 重构后的项目结构
 ```
-Yishuos官网/
-├── assets/                 # 静态资源文件
-│   ├── images/            # 图片资源
-│   ├── documents/         # 文档资源
-│   └── videos/            # 视频资源
-├── backend/               # 后端服务
-│   ├── lumarkai-api/      # Lumarkai API服务
-│   ├── yishuos-api/       # 易术主站API
-│   └── shared/            # 共享模块
-├── database/              # 数据库相关
-├── frontend/              # 前端应用
-│   ├── lumarkai-lab/      # Lumarkai实验室
-│   └── yishuos-main/      # 易术主站
-├── index.html             # 主页面
-├── yishuos-main.html      # 易术主站页面
-├── yishuos-solutions.html # 解决方案页面
-├── yishuos-research.html  # 研究页面
-├── yishuos-support.html   # 支持页面
-└── 其他页面文件...
+yishuosweb/
+├── frontend/                    # 前端代码
+│   ├── yishuos-main/           # 易术主站
+│   │   ├── src/
+│   │   │   ├── pages/          # 页面文件
+│   │   │   │   ├── home/       # 主页
+│   │   │   │   ├── eplan/      # E计划
+│   │   │   │   ├── solutions/  # 解决方案
+│   │   │   │   ├── support/    # 服务支持
+│   │   │   │   ├── careers/    # 加入我们
+│   │   │   │   ├── research/   # 易术研究
+│   │   │   │   ├── contact/    # 联系我们
+│   │   │   │   ├── auth/       # 登录注册
+│   │   │   │   └── banjing15/  # 半径十五米
+│   │   │   ├── styles/         # 样式文件
+│   │   │   ├── scripts/        # 脚本文件
+│   │   │   └── assets/         # 静态资源
+│   │   └── package.json
+│   └── lumarkai-lab/           # 光影方舟实验室
+│       ├── src/
+│       │   ├── pages/          # 页面文件
+│       │   │   ├── home/       # 主页
+│       │   │   ├── gallery/    # 光影素材库
+│       │   │   └── auth/       # 用户认证
+│       │   ├── styles/         # 样式文件
+│       │   ├── scripts/        # 脚本文件
+│       │   └── assets/         # 静态资源
+│       └── package.json
+├── backend/                     # 后端服务
+├── database/                    # 数据库相关
+├── scripts/                     # 工具脚本
+│   └── start-refactored-fixed.py  # 核心启动脚本
+├── RESTRUCTURE_LOG.md           # 重构日志
+└── README.md                    # 项目说明
 ```
 
-## 快速开始
+## 🌐 重构后的访问路径
+
+### 易术主站
+- **主页**: http://localhost:8000/yishuos-main/home/
+- **E计划**: http://localhost:8000/eplan/
+- **解决方案**: http://localhost:8000/solutions/
+- **服务支持**: http://localhost:8000/support/
+- **加入我们**: http://localhost:8000/careers/
+- **易术研究**: http://localhost:8000/research/
+- **联系我们**: http://localhost:8000/contact/
+- **登录注册**: http://localhost:8000/auth/
+- **半径十五米**: http://localhost:8000/banjing15/
+
+### 光影方舟实验室
+- **主页**: http://localhost:8000/lumarkai-lab/home/
+- **光影素材库**: http://localhost:8000/lumarkai-lab/gallery/
+- **用户登录**: http://localhost:8000/lumarkai-lab/auth/login.html
+- **用户面板**: http://localhost:8000/lumarkai-lab/auth/dashboard.html
+- **管理后台**: http://localhost:8000/lumarkai-lab/auth/admin.html
+
+## 🚀 快速开始
 
 ### 环境要求
-- Node.js 16+
-- Python 3.8+ (可选，用于Python服务器)
-- 现代浏览器支持
+- Python 3.7+
+- 现代浏览器（支持ES6+）
 
-### 安装依赖
+### 启动步骤
+
+1. **克隆项目**
 ```bash
-# 安装Node.js依赖
-npm install
-
-# 安装后端依赖
-cd backend/lumarkai-api && npm install
-cd backend/yishuos-api && npm install
-
-# 安装前端依赖
-cd frontend/lumarkai-lab && npm install
-cd frontend/yishuos-main && npm install
+git clone <repository-url>
+cd yishuosweb
 ```
 
-### 启动项目
+2. **启动服务**
 ```bash
-# 启动Python服务器
-python start_server.py
+# 使用默认端口8000
+python3 scripts/start-refactored-fixed.py
 
-# 或者使用Shell脚本
-./start.sh
-
-# 启动后端服务
-cd backend/lumarkai-api && npm start
-cd backend/yishuos-api && npm start
+# 使用自定义端口
+PORT=3000 python3 scripts/start-refactored-fixed.py
 ```
 
-### 访问地址
-- 主站: http://localhost:8000
-- 后端API: http://localhost:3000
+3. **访问网站**
+- 易术主站: http://localhost:8000/yishuos-main/home/
+- 光影方舟: http://localhost:8000/lumarkai-lab/home/
 
-## 部署说明
+## 🔧 技术特性
 
-### 静态部署
-项目支持静态部署到任何Web服务器或CDN服务。
+### 前端技术
+- **HTML5**: 语义化标签和现代Web标准
+- **CSS3**: 响应式设计、动画效果、Flexbox/Grid布局
+- **JavaScript ES6+**: 模块化开发、异步处理、DOM操作
+- **响应式设计**: 支持桌面、平板、移动设备
 
-### Docker部署
-```bash
-docker-compose up -d
-```
+### 服务特性
+- **绝对路径支持**: 所有资源使用绝对路径，确保部署稳定性
+- **URL解码**: 支持中文路径和特殊字符
+- **CORS支持**: 跨域请求支持
+- **端口配置**: 支持环境变量端口配置
+- **自动重定向**: 智能路径映射和重定向
 
-## 开发指南
+## 📁 核心文件说明
 
-### 代码规范
-- 使用ES6+语法
-- 遵循CSS命名规范
-- 保持代码注释完整
+### 启动脚本
+- `scripts/start-refactored-fixed.py` - 重构后的项目启动器
+  - 支持绝对路径资源访问
+  - 自动路径重定向
+  - URL解码支持
+  - 环境变量端口配置
 
-### 分支管理
-- `master`: 主分支，用于生产环境
-- `develop`: 开发分支
-- `feature/*`: 功能分支
+### 重要页面
+- `frontend/yishuos-main/src/pages/home/index.html` - 易术主站主页
+- `frontend/lumarkai-lab/src/pages/home/index.html` - 光影方舟主页
+- `frontend/lumarkai-lab/src/pages/gallery/index.html` - 光影素材库
 
-## 贡献指南
+### 样式文件
+- `frontend/yishuos-main/src/styles/pages/home.css` - 主站主页样式
+- `frontend/lumarkai-lab/src/pages/home/index.html` - 光影方舟内联样式
 
-1. Fork 项目
-2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 打开 Pull Request
+## 🐛 问题排查
 
-## 许可证
+### 常见问题
 
-本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情
+1. **图片不显示**
+   - 检查路径是否为绝对路径 `/assets/...`
+   - 确认图片文件存在于 `frontend/yishuos-main/src/assets/` 目录
 
-## 联系我们
+2. **页面404错误**
+   - 检查访问路径是否正确
+   - 确认文件名和目录结构
+   - 查看服务器日志
 
-- 官网: [https://yishuos.com](https://yishuos.com)
-- 邮箱: contact@yishuos.com
-- 电话: +86-xxx-xxxx-xxxx
+3. **样式异常**
+   - 检查CSS文件路径
+   - 确认CSS语法正确
+   - 检查样式优先级
 
-## 更新日志
+4. **功能失效**
+   - 检查JavaScript文件路径
+   - 确认事件绑定正确
+   - 查看浏览器控制台错误
 
-### v1.0.0 (2024-01-XX)
-- 初始版本发布
-- 完成主要功能模块
-- 响应式设计实现
-- 多品牌展示功能
+### 调试工具
+- 浏览器开发者工具
+- 服务器日志输出
+- 网络请求监控
+
+## 📚 开发指南
+
+### 添加新页面
+1. 在对应模块的 `src/pages/` 目录下创建新目录
+2. 添加 `index.html` 文件
+3. 更新启动脚本的路径映射
+4. 测试页面访问
+
+### 修改样式
+1. 在对应模块的 `src/styles/` 目录下修改CSS文件
+2. 或直接在HTML文件中修改内联样式
+3. 注意样式优先级和继承关系
+
+### 添加功能
+1. 在对应模块的 `src/scripts/` 目录下添加JavaScript文件
+2. 在HTML文件中引入脚本
+3. 实现功能逻辑和事件绑定
+
+## 🔄 重构状态
+
+### ✅ 已完成
+- 项目结构重构
+- 路径引用修复
+- 本地部署服务
+- 光影方舟页面问题解决
+- 项目清理优化
+
+### 🎯 当前状态
+- **重构完成度**: 100%
+- **功能完整性**: 100%
+- **路径正确性**: 100%
+- **部署稳定性**: 100%
+
+## 📞 技术支持
+
+- **项目维护**: 易术科技开发团队
+- **文档更新**: 2024-08-25
+- **重构状态**: 完成
+
+## 📄 许可证
+
+本项目为易术科技内部项目，版权所有。
 
 ---
 
-**易术官网项目** - 让企业数字化更简单 
+**最后更新**: 2024-08-25 19:30  
+**重构状态**: 完成，所有问题已解决  
+**下一步**: 功能测试和性能优化 

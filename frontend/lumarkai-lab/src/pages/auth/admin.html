@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开发者管理后台 - 光影方舟实验室</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+        }
+
+        /* 顶部导航栏 */
+        .top-nav {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 0.8rem;
+        }
+
+        .logo-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .admin-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .user-name {
+            font-weight: 500;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* 主容器 */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            gap: 2rem;
+        }
+
+        /* 侧边栏 */
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            height: fit-content;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f1f3f5;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .menu-icon {
+            width: 20px;
+            height: 20px;
+            opacity: 0.7;
+        }
+
+        /* 主内容区 */
+        .main-content {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .content-header {
+            padding: 2rem;
+            border-bottom: 1px solid #e9ecef;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .content-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .content-subtitle {
+            opacity: 0.9;
+        }
+
+        .content-body {
+            padding: 2rem;
+        }
+
+        /* 内容页面 */
+        .content-page {
+            display: none;
+        }
+
+        .content-page.active {
+            display: block;
+        }
+
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(30px, -30px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-change {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 数据表格 */
+        .data-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .table-header {
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .table-content {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid #f1f3f5;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+            position: sticky;
+            top: 0;
+        }
+
+        td {
+            color: #666;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-online {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-offline {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-active {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        /* 图表容器 */
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .chart-placeholder {
+            height: 300px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* 操作按钮 */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #e9ecef;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-container {
+                padding: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="/lumarkai-lab/home/" class="logo">
+                    <img src="/assets/images/lumarkai-logo.png" alt="光影方舟">
+                    <span class="logo-text">光影方舟实验室</span>
+                </a>
+                <span class="admin-badge">开发者后台</span>
+            </div>
+            <div class="nav-right">
+                <div class="user-info">
+                    <img src="" alt="用户头像" class="user-avatar" id="userAvatar">
+                    <span class="user-name" id="userName">开发者</span>
+                </div>
+                <a href="/lumarkai-lab/home/" class="nav-btn">返回网站</a>
+                <button class="nav-btn" onclick="logout()">退出登录</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主容器 -->
+    <div class="main-container">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">系统管理</h3>
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="menu-item active" data-page="dashboard">
+                        <span class="menu-icon"></span>
+                        数据总览
+                    </a></li>
+                    <li><a href="#" class="menu-item" data-page="users">
+                        <span class="menu-icon">👥</span>
+                        用户管理
+                    </a></li>
+                    <li><a href="#" class="menu-item" data-page="content">
+                        <span class="menu-icon"></span>
+                        内容管理
+                    </a></li>
+                    <li><a href="#" class="menu-item" data-page="analytics">
+                        <span class="menu-icon"></span>
+                        数据分析
+                    </a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">系统监控</h3>
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="menu-item" data-page="logs">
+                        <span class="menu-icon"></span>
+                        系统日志
+                    </a></li>
+                    <li><a href="#" class="menu-item" data-page="performance">
+                        <span class="menu-icon"></span>
+                        性能监控
+                    </a></li>
+                    <li><a href="#" class="menu-item" data-page="security">
+                        <span class="menu-icon"></span>
+                        安全中心
+                    </a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 数据总览页面 -->
+            <div class="content-page active" id="dashboard">
+                <div class="content-header">
+                    <h2 class="content-title">数据总览</h2>
+                    <p class="content-subtitle">实时监控系统运行状态和用户活动数据</p>
+                </div>
+                <div class="content-body">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalUsers">0</div>
+                            <div class="stat-label">总用户数</div>
+                            <div class="stat-change">+12% 较上月</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="activeUsers">0</div>
+                            <div class="stat-label">活跃用户</div>
+                            <div class="stat-change">+8% 较上周</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalDownloads">0</div>
+                            <div class="stat-label">总下载量</div>
+                            <div class="stat-change">+25% 较上月</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="systemStatus">99.9%</div>
+                            <div class="stat-label">系统可用性</div>
+                            <div class="stat-change">稳定运行</div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3 class="chart-title">用户活动趋势</h3>
+                        <div class="chart-placeholder">
+                            用户活动图表 (集成Chart.js后显示真实数据)
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3 class="chart-title">下载量统计</h3>
+                        <div class="chart-placeholder">
+                            下载量柱状图 (集成Chart.js后显示真实数据)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 用户管理页面 -->
+            <div class="content-page" id="users">
+                <div class="content-header">
+                    <h2 class="content-title">用户管理</h2>
+                    <p class="content-subtitle">管理注册用户和账户权限</p>
+                </div>
+                <div class="content-body">
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="exportUserData()">导出用户数据</button>
+                        <button class="btn btn-secondary" onclick="refreshUserList()">刷新列表</button>
+                    </div>
+
+                    <div class="data-table">
+                        <div class="table-header">用户列表</div>
+                        <div class="table-content">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>用户ID</th>
+                                        <th>用户名</th>
+                                        <th>邮箱</th>
+                                        <th>账户类型</th>
+                                        <th>注册时间</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="userTableBody">
+                                    <!-- 用户数据将通过JavaScript填充 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 内容管理页面 -->
+            <div class="content-page" id="content">
+                <div class="content-header">
+                    <h2 class="content-title">内容管理</h2>
+                    <p class="content-subtitle">管理素材库和用户生成内容</p>
+                </div>
+                <div class="content-body">
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="uploadContent()">上传新素材</button>
+                        <button class="btn btn-secondary" onclick="batchProcess()">批量处理</button>
+                    </div>
+
+                    <div class="data-table">
+                        <div class="table-header">素材列表</div>
+                        <div class="table-content">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>素材ID</th>
+                                        <th>标题</th>
+                                        <th>分类</th>
+                                        <th>下载次数</th>
+                                        <th>上传时间</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="contentTableBody">
+                                    <!-- 内容数据将通过JavaScript填充 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 数据分析页面 -->
+            <div class="content-page" id="analytics">
+                <div class="content-header">
+                    <h2 class="content-title">数据分析</h2>
+                    <p class="content-subtitle">深度分析用户行为和系统性能</p>
+                </div>
+                <div class="content-body">
+                    <div class="chart-container">
+                        <h3 class="chart-title">用户行为热力图</h3>
+                        <div class="chart-placeholder">
+                            用户行为热力图 (需要集成数据分析库)
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3 class="chart-title">素材类别受欢迎程度</h3>
+                        <div class="chart-placeholder">
+                            🍕 饼图显示各类别下载占比
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 系统日志页面 -->
+            <div class="content-page" id="logs">
+                <div class="content-header">
+                    <h2 class="content-title">系统日志</h2>
+                    <p class="content-subtitle">查看系统运行日志和错误记录</p>
+                </div>
+                <div class="content-body">
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="downloadLogs()">下载日志</button>
+                        <button class="btn btn-danger" onclick="clearLogs()">清空日志</button>
+                    </div>
+
+                    <div class="data-table">
+                        <div class="table-header">系统日志</div>
+                        <div class="table-content">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>时间</th>
+                                        <th>级别</th>
+                                        <th>模块</th>
+                                        <th>消息</th>
+                                        <th>IP地址</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="logsTableBody">
+                                    <!-- 日志数据将通过JavaScript填充 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 性能监控页面 -->
+            <div class="content-page" id="performance">
+                <div class="content-header">
+                    <h2 class="content-title">性能监控</h2>
+                    <p class="content-subtitle">监控系统性能指标和资源使用情况</p>
+                </div>
+                <div class="content-body">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">23ms</div>
+                            <div class="stat-label">平均响应时间</div>
+                            <div class="stat-change">优秀</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">65%</div>
+                            <div class="stat-label">CPU使用率</div>
+                            <div class="stat-change">正常</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">78%</div>
+                            <div class="stat-label">内存使用率</div>
+                            <div class="stat-change">正常</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">45GB</div>
+                            <div class="stat-label">磁盘使用量</div>
+                            <div class="stat-change">充足</div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3 class="chart-title">系统资源使用趋势</h3>
+                        <div class="chart-placeholder">
+                            系统资源使用图表
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 安全中心页面 -->
+            <div class="content-page" id="security">
+                <div class="content-header">
+                    <h2 class="content-title">安全中心</h2>
+                    <p class="content-subtitle">监控系统安全状态和异常行为</p>
+                </div>
+                <div class="content-body">
+                    <div class="data-table">
+                        <div class="table-header">安全事件</div>
+                        <div class="table-content">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>时间</th>
+                                        <th>事件类型</th>
+                                        <th>严重程度</th>
+                                        <th>IP地址</th>
+                                        <th>描述</th>
+                                        <th>状态</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="securityTableBody">
+                                    <!-- 安全事件数据将通过JavaScript填充 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdminAccess();
+            loadDashboardData();
+            initMenuNavigation();
+            loadMockData();
+        });
+
+        // 检查管理员权限
+        function checkAdminAccess() {
+            const user = JSON.parse(localStorage.getItem('lumarkai_user') || 'null');
+            if (!user || !user.isLoggedIn) {
+                alert('请先登录');
+                window.location.href = 'lumarkai-login.html';
+                return;
+            }
+
+            if (user.accountType !== 'developer') {
+                alert('您没有访问管理后台的权限');
+                window.location.href = 'lumarkai-user-dashboard.html';
+                return;
+            }
+
+            // 填充用户信息
+            document.getElementById('userName').textContent = user.name || '开发者';
+            document.getElementById('userAvatar').src = user.avatar || 'assets/images/xiaoyi.png';
+        }
+
+        // 加载仪表板数据
+        function loadDashboardData() {
+            // 模拟加载数据
+            setTimeout(() => {
+                document.getElementById('totalUsers').textContent = '1,247';
+                document.getElementById('activeUsers').textContent = '892';
+                document.getElementById('totalDownloads').textContent = '15,673';
+            }, 500);
+        }
+
+        // 初始化菜单导航
+        function initMenuNavigation() {
+            const menuItems = document.querySelectorAll('.menu-item');
+            const contentPages = document.querySelectorAll('.content-page');
+
+            menuItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 移除所有active状态
+                    menuItems.forEach(mi => mi.classList.remove('active'));
+                    contentPages.forEach(cp => cp.classList.remove('active'));
+                    
+                    // 添加当前项的active状态
+                    this.classList.add('active');
+                    
+                    // 显示对应的内容页面
+                    const targetPage = this.getAttribute('data-page');
+                    const targetContent = document.getElementById(targetPage);
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        // 加载模拟数据
+        function loadMockData() {
+            loadUserData();
+            loadContentData();
+            loadLogsData();
+            loadSecurityData();
+        }
+
+        // 加载用户数据
+        function loadUserData() {
+            const users = [
+                { id: 1, name: '张三', email: 'zhangsan@example.com', type: 'personal', date: '2024-01-15', status: 'active' },
+                { id: 2, name: '李四', email: 'lisi@example.com', type: 'enterprise', date: '2024-01-14', status: 'active' },
+                { id: 3, name: '王五', email: 'wangwu@example.com', type: 'personal', date: '2024-01-13', status: 'offline' },
+            ];
+
+            const tbody = document.getElementById('userTableBody');
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.type === 'personal' ? '个人' : user.type === 'enterprise' ? '企业' : '开发者'}</td>
+                    <td>${user.date}</td>
+                    <td><span class="status-badge ${user.status === 'active' ? 'status-active' : 'status-offline'}">${user.status === 'active' ? '活跃' : '离线'}</span></td>
+                    <td><button class="btn btn-secondary" onclick="editUser(${user.id})">编辑</button></td>
+                </tr>
+            `).join('');
+        }
+
+        // 加载内容数据
+        function loadContentData() {
+            const contents = [
+                { id: 1, title: '韩国女性肖像', category: '人物肖像', downloads: 245, date: '2024-01-15', status: 'active' },
+                { id: 2, title: '富士山金色时刻', category: '自然风光', downloads: 189, date: '2024-01-14', status: 'active' },
+                { id: 3, title: '四大文明古国', category: '历史文化', downloads: 156, date: '2024-01-13', status: 'active' },
+            ];
+
+            const tbody = document.getElementById('contentTableBody');
+            tbody.innerHTML = contents.map(content => `
+                <tr>
+                    <td>${content.id}</td>
+                    <td>${content.title}</td>
+                    <td>${content.category}</td>
+                    <td>${content.downloads}</td>
+                    <td>${content.date}</td>
+                    <td><span class="status-badge status-active">已发布</span></td>
+                    <td><button class="btn btn-secondary" onclick="editContent(${content.id})">编辑</button></td>
+                </tr>
+            `).join('');
+        }
+
+        // 加载日志数据
+        function loadLogsData() {
+            const logs = [
+                { time: '2024-01-15 14:30:25', level: 'INFO', module: 'USER', message: '用户登录成功', ip: '192.168.1.100' },
+                { time: '2024-01-15 14:28:15', level: 'WARN', module: 'AUTH', message: '验证码错误', ip: '192.168.1.101' },
+                { time: '2024-01-15 14:25:10', level: 'ERROR', module: 'DOWNLOAD', message: '下载失败', ip: '192.168.1.102' },
+            ];
+
+            const tbody = document.getElementById('logsTableBody');
+            tbody.innerHTML = logs.map(log => `
+                <tr>
+                    <td>${log.time}</td>
+                    <td><span class="status-badge ${log.level === 'ERROR' ? 'status-offline' : log.level === 'WARN' ? 'status-active' : 'status-online'}">${log.level}</span></td>
+                    <td>${log.module}</td>
+                    <td>${log.message}</td>
+                    <td>${log.ip}</td>
+                </tr>
+            `).join('');
+        }
+
+        // 加载安全数据
+        function loadSecurityData() {
+            const security = [
+                { time: '2024-01-15 14:35:00', type: '登录异常', level: '中', ip: '192.168.1.105', desc: '多次登录失败', status: '已处理' },
+                { time: '2024-01-15 13:20:00', type: 'SQL注入', level: '高', ip: '192.168.1.106', desc: '检测到SQL注入尝试', status: '已阻止' },
+            ];
+
+            const tbody = document.getElementById('securityTableBody');
+            tbody.innerHTML = security.map(item => `
+                <tr>
+                    <td>${item.time}</td>
+                    <td>${item.type}</td>
+                    <td><span class="status-badge ${item.level === '高' ? 'status-offline' : 'status-active'}">${item.level}</span></td>
+                    <td>${item.ip}</td>
+                    <td>${item.desc}</td>
+                    <td><span class="status-badge status-online">${item.status}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        // 管理功能函数
+        function exportUserData() {
+            alert('用户数据导出功能开发中...');
+        }
+
+        function refreshUserList() {
+            loadUserData();
+            alert('用户列表已刷新');
+        }
+
+        function editUser(id) {
+            alert(`编辑用户 ${id} 的功能开发中...`);
+        }
+
+        function uploadContent() {
+            alert('上传新素材功能开发中...');
+        }
+
+        function batchProcess() {
+            alert('批量处理功能开发中...');
+        }
+
+        function editContent(id) {
+            alert(`编辑内容 ${id} 的功能开发中...`);
+        }
+
+        function downloadLogs() {
+            alert('下载日志功能开发中...');
+        }
+
+        function clearLogs() {
+            if (confirm('确定要清空所有日志吗？')) {
+                document.getElementById('logsTableBody').innerHTML = '';
+                alert('日志已清空');
+            }
+        }
+
+        // 退出登录
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                localStorage.removeItem('lumarkai_user');
+                window.location.href = 'lumarkai-login.html';
+            }
+        }
+    </script>
+</body>
+</html> 

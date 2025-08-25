@@ -15,7 +15,7 @@ yarn-error.log*
 logs/
 *.log
 
-# 运行时数据
+# 运行时文件
 pids/
 *.pid
 *.seed
@@ -26,7 +26,8 @@ coverage/
 .nyc_output/
 
 # 依赖目录
-jspm_packages/
+.npm/
+.eslintcache
 
 # 可选npm缓存目录
 .npm
@@ -58,26 +59,45 @@ Thumbs.db
 *.swo
 *~
 
+# 操作系统文件
+*.tmp
+*.temp
+
+# 备份文件
+*.bak
+*.backup
+*~
+
+# 本地配置文件
+config.local.js
+settings.local.json
+
 # 数据库文件
 *.db
-*.db-shm
-*.db-wal
+*.sqlite
+*.sqlite3
 
 # 上传文件
 uploads/
-avatars/
-content/
+public/uploads/
 
-# 备份文件
-*.backup
-*.bak
+# 缓存文件
+.cache/
+cache/
 
-# 压缩文件
-*.zip
-*.tar.gz
-*.rar
+# 测试文件
+test-results/
+coverage/
 
-# 其他
-*.pid
-*.seed
-*.pid.lock
+# 构建产物
+dist/
+build/
+out/
+
+# 包管理器锁文件（可选，根据团队策略决定）
+# package-lock.json
+# yarn.lock
+
+# 本地开发文件
+.local/
+local/
