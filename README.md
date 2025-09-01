@@ -69,8 +69,15 @@ yishuosweb/
 ## 🚀 快速开始
 
 ### 环境要求
-- Python 3.7+
-- 现代浏览器（支持ES6+）
+- **Python**: 3.7+ (推荐 3.9+)
+- **浏览器**: 现代浏览器（支持ES6+）
+- **操作系统**: macOS 10.15+ / Windows 10+ / Ubuntu 18.04+
+
+### ⚠️ 重要提醒
+**项目必须使用特定的启动脚本才能正常显示图片！**
+- ❌ 不要直接双击HTML文件
+- ❌ 不要使用 `python -m http.server`
+- ✅ 必须使用 `./start-project.sh` 或 `python3 scripts/start-refactored-fixed.py`
 
 ### 启动步骤
 
@@ -81,12 +88,32 @@ cd yishuosweb
 ```
 
 2. **启动服务**
+
+#### 方法一：一键启动脚本（推荐）
+```bash
+# macOS/Linux
+./start-project.sh
+
+# Windows
+start-project.bat
+```
+
+#### 方法二：手动启动
 ```bash
 # 使用默认端口8000
 python3 scripts/start-refactored-fixed.py
 
 # 使用自定义端口
 PORT=3000 python3 scripts/start-refactored-fixed.py
+```
+
+#### 方法三：环境变量配置
+```bash
+# 设置端口
+export PORT=3000
+
+# 启动服务
+python3 scripts/start-refactored-fixed.py
 ```
 
 3. **访问网站**
@@ -128,11 +155,43 @@ PORT=3000 python3 scripts/start-refactored-fixed.py
 
 ## 🐛 问题排查
 
-### 常见问题
+### 🚨 最常见问题：图片不显示
 
-1. **图片不显示**
-   - 检查路径是否为绝对路径 `/assets/...`
-   - 确认图片文件存在于 `frontend/yishuos-main/src/assets/` 目录
+**症状**: 页面加载但图片显示为破损图标或空白  
+**原因**: 没有使用项目启动脚本，绝对路径无法解析  
+
+**解决方案**:
+```bash
+# 停止当前服务器 (Ctrl+C)
+# 使用正确的启动脚本
+./start-project.sh
+# 或
+python3 scripts/start-refactored-fixed.py
+```
+
+**为什么会出现这个问题？**
+- 项目使用绝对路径 `/assets/images/...`
+- 需要启动脚本进行路径映射到 `frontend/yishuos-main/src/assets/images/...`
+- 普通HTTP服务器无法理解这种映射关系
+
+### 其他常见问题
+
+1. **端口被占用**
+   ```bash
+   # 查看端口占用
+   lsof -i :8000
+   
+   # 终止占用进程
+   lsof -ti:8000 | xargs kill -9
+   
+   # 使用其他端口
+   PORT=8080 ./start-project.sh
+   ```
+
+2. **文件路径错误**
+   - 确认在项目根目录执行脚本
+   - 检查启动脚本是否存在
+   - 验证项目文件结构
 
 2. **页面404错误**
    - 检查访问路径是否正确
@@ -155,6 +214,28 @@ PORT=3000 python3 scripts/start-refactored-fixed.py
 - 网络请求监控
 
 ## 📚 开发指南
+
+### 🛠️ 开发环境配置
+
+#### 详细配置指南
+查看 `DEVELOPMENT_SETUP.md` 获取完整的开发环境配置说明，包括：
+- 环境要求检查
+- 常见问题解决方案
+- 路径映射原理解释
+- 一键启动脚本使用
+
+#### 快速配置检查
+```bash
+# 1. 检查Python环境
+python3 --version
+
+# 2. 检查项目文件
+ls -la scripts/start-refactored-fixed.py
+ls -la frontend/yishuos-main/src/assets/images/
+
+# 3. 启动项目
+./start-project.sh
+```
 
 ### 添加新页面
 1. 在对应模块的 `src/pages/` 目录下创建新目录
